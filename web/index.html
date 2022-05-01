@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    const detectColorScheme = () => {
+        let theme = localStorage.getItem("theme")
+
+        switch (theme) {
+            case "dark":
+            case "light":
+                return theme
+            default:
+                if (window.matchMedia) {
+                    if (window.matchMedia("(prefers-color-scheme: dark)").matches) return "dark"
+                    else return "light"
+                } else return "light"
+        }
+    }
+
+    const theme = detectColorScheme()
+    localStorage.setItem("theme", theme)
+    document.documentElement.setAttribute("theme", theme)
+</script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<header>
+    <div>
+        <h2>Cambridge Pseudo-assembly Interpreter</h2>
+        <h3>For Computer Science 8021 (2021)</h3>
+    </div>
+    <div id="togglePlaceholder"></div>
+    <script defer>
+        const btn = document.createElement("button")
+        btn.id = "toggle"
+        btn.ariaLabel = "toggle theme"
+        btn.type = "button"
+
+        const switchLight = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"></path>
+        </svg>`
+
+        const switchDark = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+        </svg>`
+
+        btn.innerHTML = (detectColorScheme() === "dark") ? switchLight : switchDark
+
+        btn.onclick = () => {
+            switch (detectColorScheme()) {
+                case "dark":
+                    localStorage.setItem("theme", "light")
+                    document.documentElement.setAttribute("theme", "light")
+                    btn.innerHTML = switchDark
+                    break
+
+                case "light":
+                    localStorage.setItem("theme", "dark")
+                    document.documentElement.setAttribute("theme", "dark")
+                    btn.innerHTML = switchLight
+                    break
+            }
+        }
+
+        document.getElementById("togglePlaceholder").appendChild(btn)
+    </script>
+</header>
+<main>
+    <div class="program">
+        <div class="flex-header"><label for="prog">Program</label></div>
+        <div class="flex-content" style="margin: 1em 1em 1em 0;"><textarea id="prog" class="code"
+                                                                           title="Type program here">out #65 // 'A'
+out #10 // '\n'
+end
+
+
+none:</textarea></div>
+    </div>
+    <div class="in">
+        <div class="flex-header"><label for="input">Input</label></div>
+        <div class="flex-content" style="margin: 1em 1em 1em 0;"><textarea id="input" class="code"></textarea></div>
+    </div>
+    <div class="out">
+        <div class="flex-header"><label for="output">Output</label></div>
+        <div class="flex-content"><textarea class="code toClear" id="output"
+                                            style="caret-color: transparent;"></textarea></div>
+        <script>
+            {
+                const op = document.getElementById("output")
+                op.onkeydown = (ev) => {
+                    ev.preventDefault()
+                }
+            }
+        </script>
+    </div>
+    <div class="bench">
+        <div><label for="timer">Elapsed</label></div>
+        <div><p class="code toClear" id="timer"></p></div>
+    </div>
+    <div class="buttons">
+        <script defer>
+            const clearOutput = () => {
+                for (const el of document.getElementsByClassName("toClear")) {
+                    el.innerText ? el.innerText = "" : null
+                    el.value ? el.value = "" : null
+                }
+            }
+        </script>
+        <button id="run" type="submit">Run</button>
+        <button onclick="clearOutput()" type="reset">Clear Output</button>
+    </div>
+    <script type="module" src="index.js"></script>
+</main>
+</body>
+</html>

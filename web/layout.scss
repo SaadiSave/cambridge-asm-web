@@ -1,0 +1,81 @@
+@media (orientation: landscape) {
+  main {
+    display: grid;
+    grid-template-areas:
+    "prog btn"
+    "prog bench"
+    "prog output"
+    "input output";
+
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 2fr 3fr 4fr auto;
+    height: 100%;
+  }
+}
+
+textarea {
+  box-sizing: border-box;
+}
+
+h2, h3 {
+  margin: auto;
+}
+
+#toggle {
+  width: fit-content;
+  height: fit-content;
+  float: right;
+}
+
+header {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin: auto auto 1em;
+}
+
+textarea {
+  width: 100%;
+}
+
+.program, .in, .out {
+  display: flex;
+  flex-flow: column;
+}
+
+.flex-header {
+  flex: 0 1 auto;
+}
+
+.flex-content {
+  flex: 1 1 auto;
+}
+
+.program {
+  grid-area: prog;
+}
+
+.in {
+  grid-area: input;
+}
+
+.out {
+  grid-area: output;
+}
+
+.bench {
+  grid-area: bench;
+}
+
+.buttons {
+  grid-area: btn;
+}
+
+.code {
+  border-radius: 5px;
+  padding: 0.5em;
+  height: 100%;
+}
+
+label {
+  display: inline;
+}
