@@ -1,16 +1,1 @@
-# Node.js
-/node_modules
-
-# Rust
-/target
-/Cargo.lock
-
-# Build artifacts
-*.js
-*.d.ts
-*.map
-*.wasm
-*.css
-
-# VSCode
-/.vscode
+*
