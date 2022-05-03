@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Merriweather+Sans&family=Merriweather:ital@0;1&display=swap');
 
 // Ayu-rs
 [theme="dark"] {
@@ -22,22 +22,31 @@
   --link: #2b79a2;
 }
 
-h1, h2, h3, h4, h5, h6 {
+body {
+  background-color: var(--bg);
   color: var(--text);
+}
+
+h2, h3 {
+  font-family: "Merriweather", serif;
+}
+
+h3 {
+  font-style: italic;
 }
 
 label {
-  color: var(--text);
-}
-
-body {
-  background-color: var(--bg);
+  font-family: "Merriweather Sans", sans-serif;
+  font-size: 16pt;
 }
 
 button {
   border-radius: 5px;
   background-color: var(--bg-secondary);
   color: var(--btn-text);
+  border: 1px solid black;
+  font-size: 16pt;
+  font-family: "Merriweather Sans", sans-serif;
 }
 
 textarea {
@@ -56,4 +65,16 @@ svg {
   font-family: "JetBrains Mono", monospace;
   color: var(--code-text);
   background-color: var(--code-bg);
+  font-size: 12pt;
+  border-radius: 5px;
+}
+
+#error {
+  color: var(--btn-text);
+  background-color: var(--bg-secondary);
+  border-radius: 5px;
+}
+
+#error > p {
+  font-family: "JetBrains Mono", monospace;
 }

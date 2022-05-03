@@ -78,7 +78,6 @@
 out #10 // '\n'
 end
 
-
 none:</textarea></div>
     </div>
     <div class="in">
@@ -87,7 +86,7 @@ none:</textarea></div>
     </div>
     <div class="out">
         <div class="flex-header"><label for="output">Output</label></div>
-        <div class="flex-content"><textarea class="code toClear" id="output"
+        <div class="flex-content" style="margin: 1em 1em 1em 0;"><textarea class="code toClear" id="output"
                                             style="caret-color: transparent;"></textarea></div>
         <script>
             {
@@ -106,15 +105,28 @@ none:</textarea></div>
         <script defer>
             const clearOutput = () => {
                 for (const el of document.getElementsByClassName("toClear")) {
-                    el.innerText ? el.innerText = "" : null
-                    el.value ? el.value = "" : null
+                    if (el.innerText) el.innerText = ""
+                    if (el.value) el.value = ""
                 }
             }
         </script>
         <button id="run" type="submit">Run</button>
-        <button onclick="clearOutput()" type="reset">Clear Output</button>
+        <button id="clearOutput" onclick="clearOutput()" type="reset">Clear Output</button>
     </div>
     <script type="module" src="index.js"></script>
 </main>
+<div id="error">
+    <h1 id="errorHead">Oops, an error occurred!</h1>
+    <p id="errorContent"></p>
+    <script>
+        const closeError = () => {
+            const head = document.getElementById("errorHead")
+            if (head.innerText !== "Oops, an error occurred!") head.innerText = "Oops, an error occurred!"
+            document.getElementById("error").style.display = "none"
+            document.getElementById("errorContent").innerText = ""
+        }
+    </script>
+    <button onclick="closeError()">Close</button>
+</div>
 </body>
 </html>

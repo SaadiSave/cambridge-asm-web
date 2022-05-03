@@ -1,3 +1,4 @@
+use js_sys::{Function, Uint8Array};
 use std::io::{self, Read, Write};
 use wasm_bindgen::prelude::*;
 
@@ -5,13 +6,10 @@ fn set_panic_hook() {
     console_error_panic_hook::set_once()
 }
 
-#[wasm_bindgen]
 #[repr(transparent)]
-pub struct Input(Vec<u8>);
+struct Input(Vec<u8>);
 
-#[wasm_bindgen]
 impl Input {
-    #[wasm_bindgen(constructor)]
     pub fn new(s: String) -> Self {
         Self(s.into_bytes())
     }
@@ -47,22 +45,13 @@ impl Read for Input {
     }
 }
 
-#[wasm_bindgen]
 #[repr(transparent)]
-pub struct Output(js_sys::Function);
-
-#[wasm_bindgen]
-impl Output {
-    #[wasm_bindgen(constructor)]
-    pub fn new(func: js_sys::Function) -> Self {
-        Self(func)
-    }
-}
+struct Output(Function);
 
 impl Write for Output {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         self.0
-            .call1(&JsValue::null(), &js_sys::Uint8Array::from(buf))
+            .call1(&JsValue::null(), &Uint8Array::from(buf))
             .unwrap();
         Ok(buf.len())
     }
@@ -73,7 +62,7 @@ impl Write for Output {
 }
 
 #[wasm_bindgen]
-pub fn exec(read: Input, write: Output, input: &str) {
+pub fn exec(read: String, write: Function, prog: &str) {
     use cambridge_asm::{
         make_io,
         parse::{get_fn_ext, parse},
@@ -81,7 +70,7 @@ pub fn exec(read: Input, write: Output, input: &str) {
 
     set_panic_hook();
 
-    let mut exec = parse(input, get_fn_ext, make_io!(read, write));
+    let mut exec = parse(prog, get_fn_ext, make_io!(Input::new(read), Output(write)));
 
     exec.exec();
 }

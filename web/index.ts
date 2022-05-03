@@ -25,33 +25,23 @@ const supportsWorkerType = () => {
     }
 }
 
-const registerSW = async () => {
-    if (navigator.serviceWorker) {
-        try {
-            const reg: ServiceWorkerRegistration = await navigator.serviceWorker.register("/sw/sw.js", {scope: "/"})
-
-            if (reg.installing) {
-                console.log("Installing service worker")
-            } else if (reg.waiting) {
-                console.log("Service worker installed")
-            } else if (reg.active) {
-                console.log("Service worker active")
-            }
-        } catch (e) {
-            console.error(`Registration failed with ${e}`)
-        }
-    }
-}
-
 const main = async () => {
-    registerSW().then()
+    const raiseError = (dialogBox: HTMLDivElement, out: HTMLParagraphElement, msg: string) => {
+        dialogBox.style.display = "block"
+        out.innerText = msg
+    }
+
+    const errorReporter = {
+        dialogBox: document.getElementById("error") as HTMLDivElement,
+        out: document.getElementById("errorContent") as HTMLParagraphElement,
+    }
 
     const output = document.getElementById("output") as HTMLTextAreaElement
     const timer = document.getElementById("timer") as HTMLParagraphElement
 
     const btn = document.getElementById("run") as HTMLButtonElement
     btn.onclick = () => {
-        const worker = new Worker("./worker.js", {type: "module"})
+        const worker = new Worker("./worker.js", { type: "module" })
         const decoder = new TextDecoder()
         worker.postMessage({
             check: Signal.Init,
@@ -81,7 +71,7 @@ const main = async () => {
                         break
 
                     case Signal.Err:
-                        alert(dat.message)
+                        raiseError(errorReporter.dialogBox, errorReporter.out, dat.message)
                         break
 
                     case Signal.Kill:
@@ -99,6 +89,22 @@ const main = async () => {
 }
 
 (async () => {
+    if (screen.availHeight > screen.availWidth) {
+        alert("Portrait mode is not supported. Please tilt your device.")
+    }
+
+    {
+
+        const errorHead = document.getElementById("errorHead") as HTMLHeadingElement
+        errorHead.innerText = "Instructions"
+
+        const errorContent = document.getElementById("errorContent") as HTMLParagraphElement
+        errorContent.innerText = `1. Leave a blank line between the program and memory
+2. Type in all the input that will be needed by the program during runtime in the "Input" textbox`
+
+        document.getElementById("error")!.style.display = "block"
+    }
+
     if (supportsWorkerType()) {
         await main()
     } else {

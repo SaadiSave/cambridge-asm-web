@@ -21,7 +21,7 @@ self.addEventListener("install", (evt: ExtendableEvent) => {
 })
 
 self.addEventListener("fetch", async (evt: FetchEvent) => {
-    const {request} = evt
+    const { request } = evt
     const match = await caches.match(request)
     if (match) {
         evt.respondWith(match)

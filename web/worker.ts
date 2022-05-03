@@ -1,4 +1,4 @@
-import init, { exec, Input, Output } from "./cambridge_asm_web.js"
+import init, { exec } from "./cambridge_asm_web.js"
 
 export const enum Signal {
     Init,
@@ -8,6 +8,7 @@ export const enum Signal {
     Out,
 }
 
+// Only message types sent by the worker
 export type Msg = KillMsg | ErrorMsg | OutputMsg | PerfMsg
 
 export type InitMsg = {
@@ -35,6 +36,7 @@ export type PerfMsg = {
     time: number,
 }
 
+// Intercept calls to console.error
 {
     const argsToString = (...args: any[]) => {
         let msg = ""
@@ -59,13 +61,13 @@ onmessage = async (msg: MessageEvent<InitMsg>) => {
 
     let dat = msg.data
     if (dat.check === Signal.Init) {
-        const input = new Input(dat.input)
-        const output = new Output((s: Uint8Array) => {
+        const input = dat.input
+        const output = (s: Uint8Array) => {
             postMessage({
                 check: Signal.Out,
                 bytes: s,
             } as OutputMsg)
-        })
+        }
 
         postMessage({
             check: Signal.Perf,
