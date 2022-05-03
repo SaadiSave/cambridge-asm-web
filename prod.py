@@ -78,9 +78,6 @@ def other_files():
     ) as response, open("prod/module-workers-polyfill.min.js", "wb") as f:
         f.write(response.read())
 
-    with open("prod/.gitignore", "w") as gitignore:
-        gitignore.write("*\n")
-
 
 def main():
     build()
