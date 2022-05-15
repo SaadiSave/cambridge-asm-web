@@ -30,11 +30,13 @@ const main = async () => {
         dialogBox.style.display = "block"
         out.innerText = msg
     }
-
-    const errorReporter = {
+    
+    const _err = {
         dialogBox: document.getElementById("error") as HTMLDivElement,
         out: document.getElementById("errorContent") as HTMLParagraphElement,
     }
+
+    const errorReporter = (msg: string) => raiseError(_err.dialogBox, _err.out, msg)
 
     const output = document.getElementById("output") as HTMLTextAreaElement
     const timer = document.getElementById("timer") as HTMLParagraphElement
@@ -71,7 +73,7 @@ const main = async () => {
                         break
 
                     case Signal.Err:
-                        raiseError(errorReporter.dialogBox, errorReporter.out, dat.message)
+                        errorReporter(dat.message)
                         break
 
                     case Signal.Kill:
