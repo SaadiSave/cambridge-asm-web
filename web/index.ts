@@ -26,17 +26,19 @@ const supportsWorkerType = () => {
 }
 
 const main = async () => {
-    const raiseError = (dialogBox: HTMLDivElement, out: HTMLParagraphElement, msg: string) => {
+    const makeErrorReporter = 
+    ({ dialogBox, out }: {
+        dialogBox: HTMLElement,
+        out: HTMLElement
+    }) => (msg: string) => {
         dialogBox.style.display = "block"
         out.innerText = msg
     }
-    
-    const _err = {
-        dialogBox: document.getElementById("error") as HTMLDivElement,
-        out: document.getElementById("errorContent") as HTMLParagraphElement,
-    }
 
-    const errorReporter = (msg: string) => raiseError(_err.dialogBox, _err.out, msg)
+    const raiseError = makeErrorReporter({
+        dialogBox: document.getElementById("error")!,
+        out: document.getElementById("errorContent")!,
+    })
 
     const output = document.getElementById("output") as HTMLTextAreaElement
     const timer = document.getElementById("timer") as HTMLParagraphElement
@@ -73,7 +75,7 @@ const main = async () => {
                         break
 
                     case Signal.Err:
-                        errorReporter(dat.message)
+                        raiseError(dat.message)
                         break
 
                     case Signal.Kill:
