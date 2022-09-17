@@ -26,6 +26,7 @@
     <meta name="viewport" content="width=device-width">
     <title>CASM Interpreter</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="fonts/fonts.css">
 </head>
 
 <body>
@@ -133,30 +134,6 @@ none:</textarea></div>
         </script>
         <button onclick="closeError()">Close</button>
     </div>
-    <script>
-        const KEY = "google-fonts"
-
-        if (localStorage.getItem(KEY) === null) {
-            if (confirm("Do you consent to sharing your IP address with Google to fetch fonts? Fonts will otherwise be fetched without connecting to Google's servers otherwise.")) {
-                localStorage.setItem(KEY, "y")
-            } else {
-                localStorage.setItem(KEY, "n")
-            }
-        }
-
-        const consent = localStorage.getItem(KEY) === "y"
-
-        if (consent) {
-            const style = document.createElement("style")
-            style.innerHTML = "@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Merriweather+Sans&family=Merriweather:ital@0;1&display=swap');"
-            document.body.appendChild(style)
-        } else {
-            const link = document.createElement("link")
-            link.rel = "stylesheet"
-            link.href = "./fonts/fonts.css"
-            document.head.appendChild(link)
-        }
-    </script>
 </body>
 
 </html>

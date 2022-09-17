@@ -6,8 +6,8 @@ assert version_info.major == 3
 assert version_info.minor >= 9
 
 from threading import Thread
-from os import mkdir
-from shutil import copyfile
+from os import mkdir, path
+from shutil import copyfile, copytree, rmtree
 from subprocess import run
 
 
@@ -43,7 +43,6 @@ def minify():
         "web/worker.js",
         "web/index.html",
         "web/index.css",
-        "web/sw/sw.js",
         "pkg/cambridge_asm_web.js",
     ]
 
@@ -78,8 +77,16 @@ def other_files():
     ) as response, open("prod/module-workers-polyfill.min.js", "wb") as f:
         f.write(response.read())
 
+    if path.exists("prod/fonts"):
+        rmtree("prod/fonts")
+
+    copytree("web/fonts", "prod/fonts")
+
 
 def main():
+    if path.exists("prod"):
+        rmtree("prod")
+
     build()
     other_files()
     minify()
