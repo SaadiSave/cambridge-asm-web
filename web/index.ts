@@ -113,7 +113,7 @@ const main = async () => {
         await main()
     } else {
         // @ts-ignore
-        const _ = await import("./module-workers-polyfill-0.3.2.min.js")
+        const _ = await import("./module-workers-polyfill.min.js")
 
         await main()
     }
