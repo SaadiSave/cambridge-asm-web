@@ -1,0 +1,53 @@
+name: Rust
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Check, Format & Lint
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cargo
+        working-directory: cambridge-asm-wasm
+        run: cargo check && cargo fmt --check
+
+      - name: Website
+        run: npm run check && npm lint
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Build
+        run: npm i && npm run build
+
+      - name: Save artifacts
+        run: cp -r build /tmp/build-backup && git rev-parse HEAD | head --bytes=8 | tee /tmp/commit-hash
+
+      - name: Checkout and clear prod branch
+        run: git checkout gh-pages && git rm -r *
+
+      - name: Copy build
+        run: cp -r /tmp/build-backup/* .
+
+      - name: Commit and push
+        run: git add . && git commit -m "Deploying from @\`$(cat /tmp/commit-hash)\`" && git push origin gh-pages
