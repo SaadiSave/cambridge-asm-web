@@ -18,12 +18,14 @@ jobs:
           toolchain: stable
           override: true
 
+      - run: npm i -D
+
       - name: Cargo
         working-directory: cambridge-asm-wasm
         run: cargo check && cargo fmt --check
 
       - name: Website
-        run: npm run check && npm lint
+        run: npm run check && npm run lint
 
   build-and-deploy:
     runs-on: ubuntu-latest
