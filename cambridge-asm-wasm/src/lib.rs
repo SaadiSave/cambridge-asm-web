@@ -1,5 +1,5 @@
 use cambridge_asm::{
-    exec::{Executor, Status},
+    exec::{ExecInst, Executor, RtError, Status as ExecStat},
     inst::InstSet,
     make_io,
     parse::{self, DefaultSet},
@@ -18,6 +18,7 @@ use wasm_bindgen::prelude::*;
 static INPUT_BUFFER: Mutex<Vec<u8>> = const { Mutex::new(Vec::new()) };
 
 thread_local! {
+    /// [`thread_local`] so that type can be [`!Send`] and [`!Sync`]
     static OUTPUT_CB: RefCell<Option<Function>> = const { RefCell::new(None) };
 }
 
@@ -65,7 +66,7 @@ struct Input;
 impl Read for Input {
     fn read(&mut self, mut buf: &mut [u8]) -> io::Result<usize> {
         let lock = INPUT_BUFFER.lock().unwrap();
-        log(format!("{lock:?}").as_str());
+        log(format!("input bytes: {lock:?}").as_str());
         let written = buf.write(lock.as_slice())?;
         Ok(written)
     }
@@ -120,7 +121,7 @@ pub fn set_panic_hook() {
 
 #[derive(Serialize_repr)]
 #[repr(u8)]
-enum StatInt {
+enum StatusCode {
     Complete = 1,
     Continue = 2,
     Error = 3,
@@ -129,25 +130,50 @@ enum StatInt {
 
 #[derive(Serialize)]
 #[serde(untagged)]
-enum DataInt {
+enum StatusData {
     Str(String),
     Bool(bool),
 }
 
 #[derive(Serialize)]
-struct Stat {
-    status: StatInt,
-    data: Option<DataInt>,
+struct Status {
+    status: StatusCode,
+    data: Option<StatusData>,
 }
 
-impl Stat {
-    pub fn new(status: StatInt, data: Option<DataInt>) -> Self {
-        Self { status, data }
+impl Status {
+    pub const COMPLETE: Self = Self {
+        status: StatusCode::Complete,
+        data: None,
+    };
+
+    pub const CONTINUE: Self = Self {
+        status: StatusCode::Continue,
+        data: None,
+    };
+
+    pub fn error(exe: &Executor, error: RtError) -> Self {
+        let mut buf = Vec::new();
+        exe.source
+            .handle_err(&mut buf, &error, exe.ctx.mar)
+            .unwrap();
+
+        Self {
+            status: StatusCode::Error,
+            data: Some(StatusData::Str(String::from_utf8_lossy(&buf).into_owned())),
+        }
+    }
+
+    pub fn input_request(to_eol: bool) -> Self {
+        Self {
+            status: StatusCode::InputRequest,
+            data: Some(StatusData::Bool(to_eol)),
+        }
     }
 }
 
-impl From<Stat> for StatusExt {
-    fn from(value: Stat) -> Self {
+impl From<Status> for StatusExt {
+    fn from(value: Status) -> Self {
         StatusExt {
             obj: serde_wasm_bindgen::to_value(&value).unwrap(),
         }
@@ -158,6 +184,7 @@ impl From<Stat> for StatusExt {
 pub struct PasmExecutor {
     exe: Executor,
     first_inst: bool,
+    input_enabled: bool,
 }
 
 #[wasm_bindgen]
@@ -169,42 +196,58 @@ impl PasmExecutor {
 
         let input = Input;
         let output = Output;
+        let exe = parse::jit::<DefaultSet>(prog, make_io!(input, output))
+            .map_err(|e| wasm_bindgen::throw_str(e.iter().next().unwrap().1.to_string().as_str()))
+            .unwrap();
+
+        let (rin, inp) = (
+            DefaultSet::from_str("RIN").unwrap().id(),
+            DefaultSet::from_str("IN").unwrap().id(),
+        );
+
+        let input_enabled = exe
+            .prog
+            .iter()
+            .any(|(_, &ExecInst { id, .. })| id == rin || id == inp);
+
         Self {
-            exe: parse::jit::<DefaultSet>(prog, make_io!(input, output)).unwrap(),
+            exe,
+            input_enabled,
             first_inst: true,
         }
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn input_enabled(&self) -> bool {
+        self.input_enabled
+    }
+
+    #[wasm_bindgen]
+    pub fn run_without_input(&mut self) {
+        self.exe.exec::<DefaultSet>();
     }
 
     #[wasm_bindgen]
     pub fn step(&mut self) -> StatusExt {
         if self.first_inst {
             self.first_inst = false;
-            return self.detect_input_to_status().into();
+            return self.detect_input().into();
         }
 
         match self.exe.step::<DefaultSet>() {
-            Status::Complete => Stat::new(StatInt::Complete, None),
-            Status::Continue => self.detect_input_to_status(),
-            Status::Error(rt_error) => {
-                let mut buf = Vec::new();
-                self.exe
-                    .source
-                    .handle_err(&mut buf, &rt_error, self.exe.ctx.mar)
-                    .unwrap();
-                Stat::new(
-                    StatInt::Error,
-                    Some(DataInt::Str(String::from_utf8_lossy(&buf).into_owned())),
-                )
-            }
+            ExecStat::Complete => Status::COMPLETE,
+            ExecStat::Continue => self.detect_input(),
+            ExecStat::Error(rt_error) => Status::error(&self.exe, rt_error),
         }
         .into()
     }
 
-    fn detect_input(&self) -> Option<bool> {
+    fn detect_input(&self) -> Status {
         if self.exe.ctx.mar == self.exe.prog.len() || self.exe.ctx.end {
-            return None;
+            return Status::CONTINUE;
         }
 
+        // lookahead
         let inst = if let Some(inst) = self.exe.prog.get(&self.exe.ctx.mar) {
             inst
         } else {
@@ -216,19 +259,25 @@ impl PasmExecutor {
             DefaultSet::from_str("IN").unwrap().id(),
         );
 
-        log(format!("{rin} {inp} {}", inst.id).as_str());
-
-        match inst.id {
+        let input_detected = match inst.id {
+            // to eol
             x if x == rin => Some(true),
+            // single character
             x if x == inp => Some(false),
+            // no input needed
             _ => None,
-        }
-    }
+        };
 
-    fn detect_input_to_status(&self) -> Stat {
-        match self.detect_input() {
-            Some(to_newline) => Stat::new(StatInt::InputRequest, Some(DataInt::Bool(to_newline))),
-            None => Stat::new(StatInt::Continue, None),
+        match input_detected {
+            Some(to_eol) => {
+                log(format!(
+                    "Input detected\nRIN: {rin}\nIN: {inp}\nCurrent: {}",
+                    inst.id
+                )
+                .as_str());
+                Status::input_request(to_eol)
+            }
+            None => Status::CONTINUE,
         }
     }
 }

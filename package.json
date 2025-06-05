@@ -35,10 +35,10 @@
         "wasm-pack": "^0.13.1"
     },
     "dependencies": {
-        "@tailwindcss/aspect-ratio": "^0.4.2",
-        "@tailwindcss/container-queries": "^0.1.1",
-        "@tailwindcss/forms": "^0.5.9",
-        "@tailwindcss/typography": "^0.5.15",
+        "@codemirror/autocomplete": "^6.18.6",
+        "@codemirror/commands": "^6.8.1",
+        "@codemirror/state": "^6.5.2",
+        "@codemirror/view": "^6.36.8",
         "cambridge-asm-wasm": "file:cambridge-asm-wasm/pkg"
     }
 }
