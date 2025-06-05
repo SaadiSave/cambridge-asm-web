@@ -34,19 +34,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Save artifacts
-        run: cp -r build /tmp/build-backup && git rev-parse HEAD | head --bytes=8 | tee /tmp/commit-hash
-
-      - name: Checkout and clear prod branch
-        uses: actions/checkout@v4
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          ref: gh-pages
-
-      - name: clear directory
-        run: git rm -r *
-
-      - name: Copy build
-        run: cp -r /tmp/build-backup/* .
-
-      - name: Commit and push
-        run: git add . && git commit -m "Deploying from @\`$(cat /tmp/commit-hash)\`" && git push origin gh-pages
+          branch: gh-pages
+          folder: build
