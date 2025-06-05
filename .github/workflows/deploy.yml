@@ -6,9 +6,9 @@ on:
       - main
 
 jobs:
-  test:
+  test-build-and-deploy:
     runs-on: ubuntu-latest
-    name: Check, Format & Lint
+    name: Test, Build & Deploy
 
     steps:
       - uses: actions/checkout@v4
@@ -18,29 +18,21 @@ jobs:
           toolchain: stable
           override: true
 
-      - run: npm i -D
+      - name: NPM setup
+        run: npm i && npm i -D
 
       - name: Cargo
         working-directory: cambridge-asm-wasm
         run: cargo check && cargo fmt --check
 
-      - name: Website
+      - name: Build WASM
+        run: npm run build-wasm
+
+      - name: Lint website
         run: npm run check && npm run lint
 
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-
       - name: Build
-        run: npm i && npm run build
+        run: npm run build
 
       - name: Save artifacts
         run: cp -r build /tmp/build-backup && git rev-parse HEAD | head --bytes=8 | tee /tmp/commit-hash
