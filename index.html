@@ -1,5 +1,53 @@
-<!doctype html><html lang=en><script>const detectColorScheme=()=>{let e=localStorage.getItem("theme");switch(e){case"dark":case"light":return e;default:return window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}},theme=detectColorScheme();localStorage.setItem("theme",theme),document.documentElement.setAttribute("theme",theme)</script><meta charset=UTF-8><meta name=viewport content="width=device-width"><title>CASM Interpreter</title><link rel=stylesheet href=index.css><link rel=stylesheet href=fonts/fonts.css><header><div><h2>Cambridge Pseudo-assembly Interpreter</h2><h3>For Cambridge International AS and A Level Computer Science, 9618 (from 2021)</h3></div><div id=togglePlaceholder></div><script defer>const btn=document.createElement("button");btn.id="toggle",btn.ariaLabel="toggle theme",btn.type="button";const switchLight='<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">\n            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>\n            <circle cx="12" cy="12" r="4"></circle>\n            <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"></path>\n        </svg>',switchDark='<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">\n            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>\n            <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>\n        </svg>';btn.innerHTML="dark"===detectColorScheme()?switchLight:switchDark,btn.onclick=()=>{switch(detectColorScheme()){case"dark":localStorage.setItem("theme","light"),document.documentElement.setAttribute("theme","light"),btn.innerHTML=switchDark;break;case"light":localStorage.setItem("theme","dark"),document.documentElement.setAttribute("theme","dark"),btn.innerHTML=switchLight}},document.getElementById("togglePlaceholder").appendChild(btn)</script></header><main><div class=program><div class=flex-header><label for=prog>Program</label></div><div class=flex-content style="margin:1em 1em 1em 0"><textarea id=prog class=code title="Type program here">out #65 // 'A'
-out #10 // '\n'
-end
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="./favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+		<link href="./_app/immutable/assets/0.DchplOOP.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/2.BbQnS1b9.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.CVQUmlAj.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/D4oMPtmk.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/DSvWHr4Q.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/B8Zkkvcw.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.DJDJN1Ds.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/ByNKlBod.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/Ckv0r-W2.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/CiOsrWgG.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.Bc7xrLii.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/DUZfX04-.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.2czkQ9Za.js">
+        <title>Cambridge Pseudo-assembly Playground</title>
+        <meta name="description" content="A code playground for Cmabridge Pseudo-assembly" />
+    </head>
+    <body
+        class="bg-gray-200 text-slate-800 dark:bg-slate-950 dark:text-slate-300"
+        data-sveltekit-preload-data="hover"
+    >
+        <div style="display: contents"><!--[--><!--[--><!----><!----><div class="flex min-h-screen flex-col gap-3 p-2"><header class="flex flex-shrink flex-row justify-between pb-1 font-serif"><div><h1 class="pb-1 text-2xl svelte-1e6k429">Cambridge Pseudo-assembly Playground</h1> <h2 class="text-lg italic svelte-1e6k429">For Cambridge International AS and A Level Computer Science, 9618 (from 2021)</h2></div> <img class="invisible h-16 align-middle sm:visible" src="/CASM.svg" alt="logo"/></header> <main class="flex flex-grow flex-col gap-3"><div class="flex min-w-full flex-grow text-base" style="max-height: 60vh;"><div class="w-full max-w-full"><div class="h-full w-full max-w-full overflow-x-auto rounded-lg border border-solid border-black font-mono dark:border-slate-200"></div></div><!----></div> <div class="flex flex-col gap-4 md:flex-row"><div class="flex flex-grow flex-col gap-2 rounded-md border border-solid border-black pb-2 dark:border-slate-200"><div class="flex justify-between rounded-t-md bg-gray-300 p-2 dark:bg-slate-900"><label for="output"><!--[--><h2 class="text-lg svelte-1e6k429">Output</h2><!----><!--]--></label><!----> <div><pre>0 ms elapsed</pre></div></div> <div style="flex-basis: 0;" class="max-h-32 min-h-32 flex-grow font-mono md:max-h-52 md:min-h-52"><output name="output"><pre class="max-h-full min-h-full overflow-auto text-wrap px-2"></pre></output></div></div> <div class="flex min-w-60 max-w-full flex-col gap-4"><button class="h-full w-full flex-grow text-wrap rounded-md border border-solid border-black p-2 text-xl dark:border-slate-200 bg-green-300 dark:bg-green-900"><!--[--><!---->Run<!----><!--]--></button><!----> <button class="h-full w-full flex-grow text-wrap rounded-md border border-solid border-black p-2 text-xl dark:border-slate-200 bg-orange-300 dark:bg-orange-900"><!--[--><!---->Clear Output<!----><!--]--></button><!----> <button class="h-full w-full flex-grow text-wrap rounded-md border border-solid border-black p-2 text-xl dark:border-slate-200 bg-red-300 dark:bg-red-900"><!--[--><!---->Clear Browser Storage<!----><!--]--></button><!----> <button class="h-full w-full flex-grow text-wrap rounded-md border border-solid border-black p-2 text-xl dark:border-slate-200 bg-blue-300 dark:bg-blue-900"><!--[--><!---->Help<!----><!--]--></button><!----></div></div></main></div><!----><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_5uh3i0 = {
+						base: new URL(".", location).pathname.slice(0, -1)
+					};
 
-none:</textarea></div></div><div class=in><div class=flex-header><label for=input>Input</label></div><div class=flex-content style="margin:1em 1em 1em 0"><textarea id=input class=code></textarea></div></div><div class=out><div class=flex-header><label for=output>Output</label></div><div class=flex-content style="margin:1em 1em 1em 0"><textarea class="code toClear" id=output style=caret-color:transparent></textarea></div><script>document.getElementById("output").onkeydown=e=>{e.preventDefault()}</script></div><div class=bench><div><label for=timer>Elapsed</label></div><div><p class="code toClear" id=timer></div></div><div class=buttons><script defer>const clearOutput=()=>{for(const e of document.getElementsByClassName("toClear"))e.innerText&&(e.innerText=""),e.value&&(e.value="")}</script><button id=run type=submit>Run</button> <button id=clearOutput onclick=clearOutput() type=reset>Clear Output</button></div><script type=module src=index.js></script></main><div id=error><h1 id=errorHead>Oops, an error occurred!</h1><p id=errorContent></p><script>const closeError=()=>{const e=document.getElementById("errorHead");"Oops, an error occurred!"!==e.innerText&&(e.innerText="Oops, an error occurred!"),document.getElementById("error").style.display="none",document.getElementById("errorContent").innerText=""}</script><button onclick=closeError()>Close</button></div>
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("./_app/immutable/entry/start.CVQUmlAj.js"),
+						import("./_app/immutable/entry/app.DJDJN1Ds.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+    </body>
+</html>
