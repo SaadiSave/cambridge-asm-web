@@ -2,42 +2,52 @@ name: Rust
 
 on:
   push:
-    branches: [ main ]
-
-env:
-  CARGO_TERM_COLOR: always
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
-
+  test:
     runs-on: ubuntu-latest
+    name: Check, Format & Lint
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v3.1.1
-      with:
-        node-version: 16.15.0
+      - uses: actions/checkout@v4
 
-    - name: Install npm deps
-      run: npm i -g typescript sass minify
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
 
-    - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1.0.6
-      with:
-        toolchain: stable
-        override: true
-        target: wasm32-unknown-unknown
-    
-    - name: Install wasm-pack
-      run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - name: Cargo
+        working-directory: cambridge-asm-wasm
+        run: cargo check && cargo fmt --check
 
-    - name: Build prod bundle
-      run: sh prod.sh
-    
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
-      with:
-        branch: gh-pages
-        folder: prod
+      - name: Website
+        run: npm run check && npm lint
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Build
+        run: npm i && npm run build
+
+      - name: Save artifacts
+        run: cp -r build /tmp/build-backup && git rev-parse HEAD | head --bytes=8 | tee /tmp/commit-hash
+
+      - name: Checkout and clear prod branch
+        run: git checkout gh-pages && git rm -r *
+
+      - name: Copy build
+        run: cp -r /tmp/build-backup/* .
+
+      - name: Commit and push
+        run: git add . && git commit -m "Deploying from @\`$(cat /tmp/commit-hash)\`" && git push origin gh-pages

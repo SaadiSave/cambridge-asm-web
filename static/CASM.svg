@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   viewBox="0 0 120 120"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="CASM.svg"
+   inkscape:export-filename="favicon.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="6.125"
+     inkscape:cx="60"
+     inkscape:cy="61.142857"
+     inkscape:window-width="1704"
+     inkscape:window-height="993"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2">
+    <inkscape:grid
+       id="grid2"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       enabled="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="bg"
+     inkscape:groupmode="layer"
+     id="layer1"
+     sodipodi:insensitive="true">
+    <rect
+       style="fill:#0000aa;fill-opacity:1"
+       id="rect2"
+       width="120"
+       height="120"
+       x="0"
+       y="0"
+       rx="15"
+       ry="15" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="fore"
+     style="fill:#ffffff">
+    <path
+       d="M 60.069767,65 C 69.209302,65 75,59.06 75,49.6 h -6.27907 c 0,6.086667 -3.209302,9.46 -8.651163,9.46 -5.511627,0 -8.790697,-3.373333 -8.790697,-9.46 V 25.4 c 0,-6.086666 3.27907,-9.46 8.790697,-9.46 5.441861,0 8.651163,3.373334 8.651163,9.46 H 75 C 75,15.94 69.209302,10 60.069767,10 50.790698,10 45,15.793334 45,25.4 V 49.6 C 45,59.206667 50.790698,65 60.069767,65 Z"
+       id="text5"
+       style="-inkscape-font-specification:'JetBrains Mono';fill:#aa0a0a;stroke-width:1.10043"
+       aria-label="C" />
+    <path
+       d="m 20.000001,109.53333 h 4.386172 L 26.674611,100.48 h 10.536348 l 2.288437,9.05333 h 4.338497 L 34.82717,75.466667 H 29.0584 Z m 7.532774,-12.6 2.669844,-10.546663 c 1.001191,-3.92 1.5733,-6.72 1.716328,-7.56 0.143027,0.84 0.715137,3.64 1.716328,7.606666 L 36.305119,96.93333 Z M 60.715138,110 c 6.483906,0 10.679376,-3.82667 10.679376,-9.8 0,-4.71333 -2.717519,-8.4 -7.342071,-9.66 l -5.43504,-1.493333 c -2.47914,-0.7 -3.909414,-2.52 -3.909414,-5.04 0,-3.126667 2.288438,-5.273334 5.673418,-5.273334 3.384981,0 5.76877,2.146667 5.76877,5.273334 h 4.29082 c 0,-5.32 -4.147793,-9.006667 -10.05959,-9.006667 -5.864121,0 -9.868887,3.686667 -9.868887,9.1 0,4.386667 2.669844,7.793333 7.056016,9.006667 l 5.292012,1.446666 C 65.625743,95.3 67.199044,97.44667 67.199044,100.2 c 0,3.64 -2.526815,6.06667 -6.483905,6.06667 -4.100119,0 -6.769962,-2.28667 -6.769962,-6.06667 h -4.290821 c 0,6.11333 4.338496,9.8 11.060782,9.8 z m 17.544706,-0.46667 h 4.147794 V 93.433333 c 0,-6.16 -0.143027,-11.666666 -0.667461,-16.286666 L 87.12754,94.32 h 3.718711 l 5.625742,-17.593333 c -0.429081,4.9 -0.619784,12.133333 -0.619784,16.706666 v 16.099997 h 4.14779 V 75.466667 H 93.659122 L 89.034571,90.213333 84.600723,75.466667 h -6.340879 z"
+       id="text6"
+       style="-inkscape-font-specification:'JetBrains Mono';stroke-width:1.04819"
+       aria-label="ASM" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1"
+       x="95"
+       y="30"
+       id="text7"><tspan
+         sodipodi:role="line"
+         id="tspan7"
+         x="95"
+         y="30" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;fill-opacity:1"
+       x="88.163261"
+       y="75"
+       id="text8"><tspan
+         sodipodi:role="line"
+         id="tspan8"
+         x="88.163261"
+         y="75" /></text>
+  </g>
+</svg>
