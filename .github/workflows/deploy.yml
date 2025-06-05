@@ -38,7 +38,12 @@ jobs:
         run: cp -r build /tmp/build-backup && git rev-parse HEAD | head --bytes=8 | tee /tmp/commit-hash
 
       - name: Checkout and clear prod branch
-        run: git checkout gh-pages && git rm -r *
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: clear directory
+        run: git rm -r *
 
       - name: Copy build
         run: cp -r /tmp/build-backup/* .
